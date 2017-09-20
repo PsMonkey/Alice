@@ -1,0 +1,107 @@
+<!DOCTYPE html> 
+<html>
+
+<head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.bundle.min.js"></script>
+<script src="data.js"></script>
+<style>
+.avatar {
+	width: 160px;
+	height: 200px;
+	margin: 0 -1px;
+}
+
+.avatar_panel {
+	margin-left: auto;
+	margin-right: auto;
+	width: 820px;
+	height: 200px;
+}
+</style>
+</head>
+
+<body>
+<div class="avatar_panel">
+<img src="img/avatar1.png" class="avatar" />
+<img src="img/avatar2.png" class="avatar" />
+<img src="img/avatar3.png" class="avatar" />
+<img src="img/avatar4.png" class="avatar" />
+<img src="img/avatar5.png" class="avatar" />
+</div>
+<canvas id="sizeChart" width="400" height="100"></canvas>
+</body>
+</html>
+
+<script>
+Chart.defaults.global.defaultFontSize = 16;
+var dateFormat = "YYYY/MM/DD";
+
+new Chart(
+	document.getElementById("sizeChart"), 
+	{
+		type: 'line',
+		data: {
+			labels: ["2017/7/23", new Date()],
+			datasets: [
+				{
+					label: "身高 (cm)",
+					data: heightData,
+					backgroundColor: 'rgba(255, 99, 132, 0.2)',
+					borderColor: 'rgba(255, 99, 132, 1)',
+					borderWidth: 1,
+					fill: false,
+					yAxisID: "height-axis",
+				},
+				{
+					label: "體重 (kg)",
+					data: weightData,
+					backgroundColor: 'rgba(54, 162, 235, 0.2)',
+					borderColor: 'rgba(54, 162, 235, 1)',
+					borderWidth: 1,
+					fill: false,
+					yAxisID: "weight-axis",
+				}
+			]
+		},
+		options: {
+			responsive: true,
+			legend: {
+				display: true
+			},
+			scales: {
+				xAxes: [{
+					type: "time",
+					time: {
+						format: dateFormat,
+						displayFormats: {
+							day: dateFormat,
+							week: dateFormat,
+							month: dateFormat,
+							quarter: dateFormat,
+							year: dateFormat
+						},
+					},
+				}, ],
+				yAxes: [
+					{
+						id: "height-axis",
+						display: true,
+						position: "left",
+						ticks: {
+							beginAtZero:true
+						}
+					},
+					{
+						id: "weight-axis",
+						display: true,
+						position: "right",
+						ticks: {
+							beginAtZero:true
+						}
+					}
+				]
+			}
+		}
+	}
+);
+</script>
