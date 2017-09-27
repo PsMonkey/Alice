@@ -15,6 +15,11 @@
 	align-items:center;
 }
 
+.center {
+	margin-left: auto;
+	margin-right: auto;
+}
+
 .avatar {
 	width: 160px;
 	height: 200px;
@@ -22,15 +27,11 @@
 }
 
 .avatar_panel {
-	margin-left: auto;
-	margin-right: auto;
 	width: 820px;
 	height: 200px;
 }
 
 .chart_panel {
-	margin-left: auto;
-	margin-right: auto;
 	width: 80vw;
 	height: 40vh;
 	margin-top: 10px;
@@ -40,17 +41,19 @@
 
 <body>
 <div class="title">The Next Generation</div>
-<div class="avatar_panel">
-<img src="img/avatar1.png" class="avatar" />
-<img src="img/avatar2.png" class="avatar" />
-<img src="img/avatar3.png" class="avatar" />
-<img src="img/avatar4.png" class="avatar" />
-<img src="img/avatar5.png" class="avatar" />
+
+<div class="center avatar_panel">
+	<img src="img/avatar1.png" class="avatar" />
+	<img src="img/avatar2.png" class="avatar" />
+	<img src="img/avatar3.png" class="avatar" />
+	<img src="img/avatar4.png" class="avatar" />
+	<img src="img/avatar5.png" class="avatar" />
 </div>
 
-<div class="chart_panel">
+<div class="center chart_panel">
 	<canvas id="sizeChart" width="300" height="100"></canvas>
 </div>
+
 </body>
 </html>
 
