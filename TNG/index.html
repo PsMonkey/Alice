@@ -27,6 +27,14 @@
 	width: 820px;
 	height: 200px;
 }
+
+.chart_panel {
+	margin-left: auto;
+	margin-right: auto;
+	width: 80vw;
+	height: 40vh;
+	margin-top: 10px;
+}
 </style>
 </head>
 
@@ -39,7 +47,10 @@
 <img src="img/avatar4.png" class="avatar" />
 <img src="img/avatar5.png" class="avatar" />
 </div>
-<canvas id="sizeChart" width="400" height="100"></canvas>
+
+<div class="chart_panel">
+	<canvas id="sizeChart" width="300" height="100"></canvas>
+</div>
 </body>
 </html>
 
@@ -75,31 +86,32 @@ new Chart(
 			]
 		},
 		options: {
-			responsive: true,
 			legend: {
 				display: true
 			},
 			scales: {
-				xAxes: [{
-					type: "time",
-					time: {
-						format: dateFormat,
-						displayFormats: {
-							day: dateFormat,
-							week: dateFormat,
-							month: dateFormat,
-							quarter: dateFormat,
-							year: dateFormat
+				xAxes: [
+					{
+						type: "time",
+						time: {
+							format: dateFormat,
+							displayFormats: {
+								day: dateFormat,
+								week: dateFormat,
+								month: dateFormat,
+								quarter: dateFormat,
+								year: dateFormat
+							},
 						},
 					},
-				}, ],
+				],
 				yAxes: [
 					{
 						id: "height-axis",
 						display: true,
 						position: "left",
 						ticks: {
-							beginAtZero:true
+							min: 50
 						}
 					},
 					{
@@ -107,7 +119,7 @@ new Chart(
 						display: true,
 						position: "right",
 						ticks: {
-							beginAtZero:true
+							min: 3
 						}
 					}
 				]
