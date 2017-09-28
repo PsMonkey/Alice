@@ -36,6 +36,12 @@
 	height: 40vh;
 	margin-top: 10px;
 }
+
+.soliloquy_panel {
+	position:relative;
+	width: 650px;
+	height: 450px;
+}
 </style>
 </head>
 
@@ -51,8 +57,9 @@
 	<img src="img/avatar5.png" class="avatar" />
 </div>
 
-<div style="display:flex;justify-content:center;align-items:center;">
-	<canvas id="soliloquyCanvas" class="center" width="650" height="450"></canvas>
+<div class="center soliloquy_panel">
+	<canvas id="soliloquyDialog" style="z-index:2;position:absolute;"></canvas>
+	<canvas id="soliloquyBG" style="z-index:1;position:absolute;"></canvas>
 </div>
 
 <div class="center chart_panel">
@@ -142,27 +149,65 @@ var soliloquyImage = new Image();
 soliloquyImage.src = "img/soliloquy.png"
 soliloquyImage.onload = drawSoliloquy;
 
+var soliloquyWidth = 650;
+var soliloquyHeight = 450;
+var soliloquyBgCanvas = document.getElementById('soliloquyBG');
+var soliloquyBgCtx = soliloquyBgCanvas.getContext('2d');
+var dialogCanvas = document.getElementById('soliloquyDialog')
+var dialogCtx = dialogCanvas.getContext('2d');
 var dialogBG = "rgba(225, 220, 220, 0.9)";
 var dialogBorder = "black";
 var dialogWidth = 400;
 var dialogHeight = 75;
+var soliloquyIndex = 0;
+var start = null;
 
 function drawSoliloquy() {
-	var ctx = document.getElementById('soliloquyCanvas').getContext('2d');
-	ctx.font = "20pt Arial";
-	ctx.textBaseline = "bottom";
+	soliloquyBgCanvas.width = soliloquyWidth;
+	soliloquyBgCanvas.height = soliloquyHeight;
+	soliloquyBgCtx.drawImage(soliloquyImage, 250, 20, 400, 400);
 	
-	ctx.drawImage(soliloquyImage, 250, 20, 400, 400);
-
-	drawDialog(ctx, 0, 30, dialogWidth, dialogHeight, 30);
-	
-	ctx.fillStyle = "#000000";
-	var text = soliloquy[Math.floor(Math.random() * soliloquy.length)];
-	var w = ctx.measureText(text).width;
-	ctx.fillText(text, (dialogWidth - w) / 2, 80);
+	dialogCanvas.width = soliloquyWidth;
+	dialogCanvas.height = soliloquyHeight;
+	dialogCtx.font = "20pt Arial";
+	dialogCtx.textBaseline = "bottom";
+	drawDialog(dialogCtx, 0);
+	window.requestAnimationFrame(animateSoliloguy);
 }
 
-function drawDialog(ctx, x, y, width, height, radius){
+function animateSoliloguy(timestamp) {
+	if (!start) { start = timestamp; }
+
+	var diff = Math.floor(timestamp - start);
+	
+	if (diff < 2000) {
+		drawDialog(diff / 2000);
+	} else if (diff >= 2000 && diff < 7000) {
+		drawDialog(1);
+	} else if (diff >= 7000 && diff < 9000) {
+		drawDialog((9000 - diff) / 2000);
+	} else if (diff >= 9000) {
+		start = null;
+		soliloquyIndex++;
+		drawDialog(0);
+	}
+	
+	window.requestAnimationFrame(animateSoliloguy);
+}
+
+function drawDialog(alpha) {
+	dialogCtx.globalAlpha = alpha;
+	dialogCtx.clearRect(0, 0, dialogCtx.canvas.width, dialogCtx.canvas.height);
+
+	roundRect(dialogCtx, 0, 30, dialogWidth, dialogHeight, 30);
+	
+	dialogCtx.fillStyle = "#000000";
+	var text = soliloquy[soliloquyIndex % soliloquy.length];
+	var w = dialogCtx.measureText(text).width;
+	dialogCtx.fillText(text, (dialogWidth - w) / 2, 80);
+}
+
+function roundRect(ctx, x, y, width, height, radius){
 	ctx.beginPath();
 	ctx.moveTo(x, y + radius);
 	ctx.lineTo(x, y + height - radius);
