@@ -40,6 +40,7 @@
 </head>
 
 <body>
+
 <div class="title">The Next Generation</div>
 
 <div class="center avatar_panel">
@@ -50,9 +51,14 @@
 	<img src="img/avatar5.png" class="avatar" />
 </div>
 
+<div style="display:flex;justify-content:center;align-items:center;">
+	<canvas id="soliloquyCanvas" class="center" width="650" height="450"></canvas>
+</div>
+
 <div class="center chart_panel">
 	<canvas id="sizeChart" width="300" height="100"></canvas>
 </div>
+
 
 </body>
 </html>
@@ -130,4 +136,47 @@ new Chart(
 		}
 	}
 );
+
+// ==== 獨白區 ==== //
+var soliloquyImage = new Image();
+soliloquyImage.src = "img/soliloquy.png"
+soliloquyImage.onload = drawSoliloquy;
+
+var dialogBG = "rgba(225, 220, 220, 0.9)";
+var dialogBorder = "black";
+var dialogWidth = 400;
+var dialogHeight = 75;
+
+function drawSoliloquy() {
+	var ctx = document.getElementById('soliloquyCanvas').getContext('2d');
+	ctx.font = "20pt Arial";
+	ctx.textBaseline = "bottom";
+	
+	ctx.drawImage(soliloquyImage, 250, 20, 400, 400);
+
+	drawDialog(ctx, 0, 30, dialogWidth, dialogHeight, 30);
+	
+	ctx.fillStyle = "#000000";
+	var text = soliloquy[Math.floor(Math.random() * soliloquy.length)];
+	var w = ctx.measureText(text).width;
+	ctx.fillText(text, (dialogWidth - w) / 2, 80);
+}
+
+function drawDialog(ctx, x, y, width, height, radius){
+	ctx.beginPath();
+	ctx.moveTo(x, y + radius);
+	ctx.lineTo(x, y + height - radius);
+	ctx.quadraticCurveTo(x, y + height, x + radius, y + height);
+	ctx.lineTo(x + width - radius, y + height);
+	ctx.quadraticCurveTo(x + width, y + height, x + width, y + height - radius);
+	ctx.lineTo(x + width, y + radius);
+	ctx.quadraticCurveTo(x + width, y, x + width - radius, y);
+	ctx.lineTo(x + radius, y);
+	ctx.quadraticCurveTo(x, y, x, y + radius);
+	ctx.fillStyle = dialogBG;
+	ctx.fill();
+	ctx.strokeStyle = dialogBorder;
+	ctx.stroke();
+}
+// ======== //
 </script>
