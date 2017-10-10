@@ -160,7 +160,7 @@ var dialogBorder = "black";
 var dialogWidth = 400;
 var dialogHeight = 75;
 var soliloquyIndex = 0;
-var start = null;
+var soliloquyStart = null;
 
 function drawSoliloquy() {
 	soliloquyBgCanvas.width = soliloquyWidth;
@@ -176,9 +176,9 @@ function drawSoliloquy() {
 }
 
 function animateSoliloguy(timestamp) {
-	if (!start) { start = timestamp; }
+	if (!soliloquyStart) { soliloquyStart = timestamp; }
 
-	var diff = Math.floor(timestamp - start);
+	var diff = Math.floor(timestamp - soliloquyStart);
 	
 	if (diff < 2000) {
 		drawDialog(diff / 2000);
@@ -187,7 +187,7 @@ function animateSoliloguy(timestamp) {
 	} else if (diff >= 7000 && diff < 9000) {
 		drawDialog((9000 - diff) / 2000);
 	} else if (diff >= 9000) {
-		start = null;
+		soliloquyStart = null;
 		soliloquyIndex++;
 		drawDialog(0);
 	}
