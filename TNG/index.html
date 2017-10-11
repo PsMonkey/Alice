@@ -27,7 +27,7 @@
 }
 
 .avatar_panel {
-	width: 820px;
+	width: 860px;
 	height: 200px;
 }
 
@@ -50,11 +50,7 @@
 <div class="title">The Next Generation</div>
 
 <div class="center avatar_panel">
-	<img src="img/avatar1.png" class="avatar" />
-	<img src="img/avatar2.png" class="avatar" />
-	<img src="img/avatar3.png" class="avatar" />
-	<img src="img/avatar4.png" class="avatar" />
-	<img src="img/avatar5.png" class="avatar" />
+	<canvas id="avatarCanvas"></canvas>
 </div>
 
 <div class="center soliloquy_panel">
@@ -144,6 +140,72 @@ new Chart(
 	}
 );
 
+// ==== 頭像跑馬燈 ==== //
+var avatarAmount = 5;
+var avatarLoaded = 0;
+var avatars = [];
+var avatarCanvas = document.getElementById("avatarCanvas");
+avatarCanvas.width = avatarCanvas.parentElement.offsetWidth;
+avatarCanvas.height = avatarCanvas.parentElement.offsetHeight;
+var avatarWidth = 160;
+var avatarHeight = avatarCanvas.height;
+var avatarCtx = avatarCanvas.getContext("2d");
+var avatarIndex = 0;
+var avatarStart = null;
+const avatarVisibleAmount = Math.floor(avatarCanvas.width / avatarWidth);
+const avatarCenterOffset = avatarWidth - (avatarCanvas.width - avatarWidth * avatarVisibleAmount) / 2;
+var avatarOffset = avatarCenterOffset;	//動畫效果的 offset
+
+for (var i = 0; i < avatarAmount; i++) {
+	var avatarImg = new Image();
+	avatarImg.src = "img/avatar" + (i + 1) + ".png";
+	avatarImg.onload = avatarLoadComplete;
+	avatars[i + 1] = avatarImg;
+}
+
+avatars[0] = avatars[avatarAmount];
+
+function avatarLoadComplete() {
+	avatarLoaded++;
+	
+	if (avatarLoaded != avatarAmount) { return; }
+	
+	while (avatars.length * avatarWidth < avatarCanvas.width) {
+		avatars = avatars.concat(avatars);
+	}
+	
+	drawAvatar();
+	window.requestAnimationFrame(animateAvatar);
+}
+
+function drawAvatar() {
+	for (var i = 0; i < avatarVisibleAmount + 3; i++) {	//頭要多一張、尾要多兩張
+		avatarCtx.drawImage(
+			avatars[(i + avatarIndex) % avatarAmount], 
+			i * avatarWidth - avatarOffset, 0, avatarWidth, avatarHeight
+		);
+	}
+}
+
+function animateAvatar(timestamp) {
+	if (!avatarStart) { avatarStart = timestamp; }
+
+	var diff = Math.floor(timestamp - avatarStart);
+	
+	if (diff >= 3000 && diff < 5000) {
+		avatarOffset = avatarCenterOffset - avatarWidth * (3000 - diff) / 2000;
+		drawAvatar();
+	} else if (diff >= 5000) {
+		avatarStart = null;
+		avatarOffset = avatarCenterOffset;
+		avatarIndex++;
+		drawAvatar();
+	}
+	
+	window.requestAnimationFrame(animateAvatar);
+}
+// ======== //
+
 // ==== 獨白區 ==== //
 var soliloquyImage = new Image();
 soliloquyImage.src = "img/soliloquy.png"
@@ -197,7 +259,7 @@ function animateSoliloguy(timestamp) {
 
 function drawDialog(alpha) {
 	dialogCtx.globalAlpha = alpha;
-	dialogCtx.clearRect(0, 0, dialogCtx.canvas.width, dialogCtx.canvas.height);
+	clear(dialogCtx);
 
 	roundRect(dialogCtx, 0, 30, dialogWidth, dialogHeight, 30);
 	
@@ -222,6 +284,10 @@ function roundRect(ctx, x, y, width, height, radius){
 	ctx.fill();
 	ctx.strokeStyle = dialogBorder;
 	ctx.stroke();
+}
+
+function clear(ctx) {
+	ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 }
 // ======== //
 </script>
