@@ -14,6 +14,7 @@ var weightData = [
 	{x: "2017/11/27", y: 5.6},
 	{x: "2017/12/29", y: 5.7},
 	{x: "2018/1/29", y: 6.2},
+	{x: "2018/2/28", y: 6.5},
 ];
 var avatarAmount = 9;
 var soliloquy = [
